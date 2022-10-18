@@ -1,0 +1,43 @@
+%%
+clc;
+clear all;
+close all;
+
+a=rgb2gray(imread('im1.jpg'))
+
+imData = reshape(a,[],1);
+imData = double(imData);
+[IDX nn]=kmeans(imData,4);
+imIDX=reshape(IDX,size(a));
+
+display('done')
+
+%%
+figure(1),
+subplot(2,2,1),imshow(imIDX==1,[]), title('Observation 1');
+subplot(2,2,2),imshow(imIDX==2,[]), title('Observation 2');
+subplot(2,2,3),imshow(imIDX==3,[]), title('Observation 3');
+subplot(2,2,4),imshow(imIDX==4,[]), title('Observation 4');
+
+%%
+
+
+bw=(imIDX==2);
+se=ones(5);
+bw=imopen(bw,se);
+bw=bwareaopen(bw,100);
+bw=~bw
+figure(2),imshow(bw), title('K means clustering');
+
+%%
+%%% Dice score
+ mask = false(size(a));
+ mask(25:end-25,25:end-25) = true;
+ a_new = activecontour(a, mask, 300);
+
+%im=imbinarize(img_new);
+similarity = dice(a_new, bw);
+
+figure(3)
+imshowpair(a_new, bw)
+title(['Dice Index = ' num2str(similarity)])

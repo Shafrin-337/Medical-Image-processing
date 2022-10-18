@@ -1,0 +1,58 @@
+clc;
+clear all; close all;
+
+img=imread("im1.jpg")
+img=rgb2gray(img)
+figure(1), subplot(3,2,1),
+imshow(img), title('Original image');
+
+se = strel('disk',20); % Create the structuring element
+
+tophatFiltered = imerode(img,se);
+subplot(3,2,2),
+imshow(tophatFiltered) , title('Eroded image');%Perform the top-hat filtering and display the image
+
+contrastAdjusted = imadjust(tophatFiltered);
+subplot(3,2,3),
+imshow(contrastAdjusted) , title(' Contrast adjusted image');% Use imadjust to improve the visibility of the result
+
+%level= graythresh(contrastAdjusted)
+level=0.6
+bw = im2bw(contrastAdjusted,level)
+subplot(3,2,4),
+imshow(bw), title('Binary image');
+
+c=~bw
+subplot(3,2,5),
+imshow(c),title('Altered image');
+
+d=-bwdist(c)
+d(c)=-Inf
+l=watershed(d)
+wi=label2rgb(l,'hot','w')
+subplot(3,2,6), 
+imshow(wi), title('Heatmap labeled watershed');
+
+im=img
+im(l==0)=0;
+figure(2),
+imshow(im),title('Image segmented using watershed algorithm');
+
+% im=imbinarize(im);
+% img=imbinarize(img);
+% similarity = dice(img, im);
+% figure(3)
+% imshowpair(img, im)
+% title(['Dice Index = ' num2str(similarity)])
+
+% Dice score
+mask = false(size(img));
+mask(25:end-25,25:end-25) = true;
+BW = activecontour(img, mask, 300);
+
+im=imbinarize(im);
+similarity = dice(BW, im);
+
+figure(3)
+imshowpair(BW, im)
+title(['Dice Index = ' num2str(similarity)])

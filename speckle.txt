@@ -1,0 +1,80 @@
+clc;
+clear all;
+close all;
+
+
+%% image display
+image = imread('im1.jpg'),
+figure(1), subplot(3,3,1), imshow(image),
+title('Original image');
+image=rgb2gray(image);
+
+
+
+%% addition of noise
+
+n1 = imnoise(image,'speckle',0.2);
+subplot(3,3,2), imshow(n1),
+title('Speckle noise');
+
+
+%% average filter
+f1=fspecial('average',3)
+cf1=imfilter(n1,f1)
+subplot(3,3,4), imshow(cf1),
+cf1=double(cf1(:));
+imm=mean(cf1(:));
+ims=std(cf1(:));
+b1 = 10*log((imm)./ims)
+title(['Average filter = ' num2str(round(b1,2))]);
+
+%% disk filter
+f2=fspecial('disk',10)
+cf2=imfilter(n1,f2)
+subplot(3,3,5), imshow(cf2),
+cf2=double(cf2(:));
+imm=mean(cf2(:));
+ims=std(cf2(:));
+b2 = 10*log((imm)./ims)
+title(['Disk filter = ' num2str(round(b2,2))]);
+
+%% motion filter
+f3=fspecial('motion',20,45)
+cf3=imfilter(n1,f3)
+subplot(3,3,6), imshow(cf3),
+cf3=double(cf3(:));
+imm=mean(cf3(:));
+ims=std(cf3(:));
+b3 = 10*log((imm)./ims)
+title(['Motion filter = ' num2str(round(b3,2))]);
+
+%% laplacian filter
+f4=fspecial('laplacian',0.2)
+cf4=imfilter(n1,f4)
+subplot(3,3,7), imshow(cf4),
+cf4=double(cf4(:));
+imm=mean(cf4(:));
+ims=std(cf4(:));
+b4 = 10*log((imm)./ims)
+title(['Laplacian filter = ' num2str(round(b4,2))]);
+
+%% log filter
+f5=fspecial('log',3,0.5)
+cf5=imfilter(n1,f5)
+subplot(3,3,8), imshow(cf5),
+cf5=double(cf5(:));
+imm=mean(cf5(:));
+ims=std(cf5(:));
+b5 = 10*log((imm)./ims)
+title(['Log filter = ' num2str(round(b5,2))]);
+
+%% gaussian filter
+f6=fspecial('gaussian',3,0.5)
+cf6=imfilter(n1,f6)
+subplot(3,3,9), imshow(cf6),
+cf6=double(cf6(:));
+imm=mean(cf6(:));
+ims=std(cf6(:));
+b6 = 10*log((imm)./ims)
+title(['gaussian filter = ' num2str(round(b6,2))]);
+

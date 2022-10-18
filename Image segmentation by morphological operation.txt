@@ -1,0 +1,57 @@
+clc;
+clear all;
+close all;
+% MATLAB code for 
+% Separate the brain part from MRI image.
+  
+% read the mri image.
+k=imread("im4.png");
+  
+% display the image.
+figure(1),imshow(k);
+%imtool(k,[]);
+  
+% convert it into binary image.
+k1=im2bw(k,graythresh(k));
+  
+% display the binary image.
+figure(2),imshow(k1);
+%imtool(k1);
+  
+% Make the brain largest connected component.
+% We need to apply opening operation.
+% define the structuring element.
+SE=strel('disk',7,4);
+  
+% apply the opening operation.
+k2=imopen(k1,SE); 
+  
+% display the image now.
+figure(3),imshow(k2);
+%imtool(k2);
+  
+% apply connected component analysis.
+b=bwlabel(k2);
+figure(8),imshow(b)
+b1=label2rgb(b,'hot','w')
+  
+% display the colored map image.
+figure(4),imshow(b1);
+%imtool(b,[]);
+b(b~=7)=0
+b(b==7)=1
+
+figure(5),imshow(b)
+
+k3=imclose(b,strel('disk',18)); 
+  
+% display the brain part.
+%imtool(k3);
+ figure(6),imshow(k3) ;
+% extract the brain from original image.
+x=im2double(k)
+k4=k3.*x
+  
+% display the real brain from original image.
+%imtool(k4,[]);
+figure(7),imshow(k4)

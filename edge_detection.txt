@@ -1,0 +1,28 @@
+clc;
+clear all;
+close all;
+
+
+%% image display
+image = imread('im2.jpg'),
+image=rgb2gray(image);
+
+[BW,threshOut] = edge(image)
+
+%%edge prewitt
+edge_prewitt=edge(image,'prewitt',threshOut)
+
+%%edge sobel
+edge_sobel=edge(image,'sobel',threshOut)
+
+%%edge roberts
+edge_roberts=edge(image,'roberts',threshOut)
+
+%%canny roberts
+edge_canny=edge(image,'canny',threshOut)
+
+figure(1), imshow(image), title('Original image');
+figure(2), imshow(edge_prewitt), title('Edge detection using prewitt operator');
+figure(3), imshow(edge_sobel), title('Edge detection  using sobel operator');
+figure(4), imshow(edge_roberts), title('Edge detection using roberts operator');
+figure(5), imshow(edge_canny), title('Canny edge detection');
